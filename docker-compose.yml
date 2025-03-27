@@ -1,0 +1,30 @@
+services:
+  app1:
+    build: ./
+    container_name: app1
+    networks: 
+      - hello_world_net
+    volumes:
+      - ./logs/app1:/root/.pm2/logs
+  app2:
+    build: ./
+    container_name: app2
+    networks:
+      - hello_world_net
+    volumes:
+      - ./logs/app2:/root/.pm2/logs
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8888:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app1
+      - app2
+    networks:
+      - hello_world_net
+
+networks:
+  hello_world_net:
+    driver: bridge
